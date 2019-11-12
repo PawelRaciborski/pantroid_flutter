@@ -24,9 +24,9 @@ class DatePickerState extends State<DatePicker> {
 
   String get _displayText {
     if (selectedDate != null) {
-      return _dateTimeFormatter.format(selectedDate);
+      return "${widget.hint}: ${_dateTimeFormatter.format(selectedDate)}";
     } else {
-      return widget.hint;
+      return "${widget.hint}: -";
     }
   }
 
