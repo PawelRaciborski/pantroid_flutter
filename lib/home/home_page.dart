@@ -10,9 +10,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pantroid"),
       ),
-      body: Center(
-        child: Text("Hello"),
-      ),
+      body: _buildList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -21,4 +19,19 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildList() => ListView.builder(
+      itemCount: 20,
+      itemBuilder: (BuildContext context, int index) =>
+          _buildListItem(index, () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Item $index clicked"),
+            ));
+          }));
+
+  Widget _buildListItem(int index, Function onTap) => ListTile(
+    title:  Text("$index"),
+    subtitle: Text("AAAA"),
+    trailing: Icon(Icons.ac_unit),
+  );
 }
