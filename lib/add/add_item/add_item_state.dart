@@ -9,6 +9,12 @@ abstract class AddItemState {
   DateTime get addingDate;
 
   DateTime get expirationDate;
+
+  bool get isNameValid;
+
+  bool get isDateValid;
+
+  bool get idFormValid;
 }
 
 class InitialAddItemState extends AddItemState {
@@ -23,22 +29,34 @@ class InitialAddItemState extends AddItemState {
 
   @override
   int get quantity => 0;
+
+  @override
+  bool get isNameValid => true;
+
+  @override
+  bool get isDateValid => true;
+
+  @override
+  bool get idFormValid => false;
 }
 
 class EditAddItemState extends AddItemState {
   final String _name;
-
   final int _quantity;
-
   final DateTime _addingDate;
-
   final DateTime _expirationDate;
+  final bool _isNameValid;
+  final bool _isDateValid;
+  final bool _isFormValid;
 
   EditAddItemState(
     this._name,
     this._quantity,
     this._addingDate,
     this._expirationDate,
+    this._isNameValid,
+    this._isDateValid,
+      this._isFormValid,
   );
 
   @override
@@ -52,4 +70,13 @@ class EditAddItemState extends AddItemState {
 
   @override
   int get quantity => _quantity;
+
+  @override
+  bool get isNameValid => _isNameValid;
+
+  @override
+  bool get isDateValid => _isDateValid;
+
+  @override
+  bool get idFormValid => _isFormValid;
 }

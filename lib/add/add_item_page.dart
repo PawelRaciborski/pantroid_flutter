@@ -5,8 +5,21 @@ import 'package:pantroid/add/add_item/add_item_bloc.dart';
 
 import 'date_picker.dart';
 
-class AddItemPage extends StatelessWidget {
+class AddItemPage extends StatefulWidget {
   static const route = "/add";
+
+  @override
+  _AddItemPageState createState() => _AddItemPageState();
+}
+
+class _AddItemPageState extends State<AddItemPage> {
+  AddItemBloc _addItemBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _addItemBloc = AddItemBloc();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +28,35 @@ class AddItemPage extends StatelessWidget {
         title: Text("Add new item"),
       ),
       body: BlocProvider<AddItemBloc>(
-        builder: (context) => AddItemBloc(),
+        builder: (context) => _addItemBloc,
         child: Column(
           children: <Widget>[
             NameInputWidget(),
             _buildQuantityInput(),
-            _buildDateInput(context, "Adding date", (dateTime) {}),
-            _buildDateInput(context, "Expiration date", (dateTime) {}),
+            BlocBuilder<AddItemBloc, AddItemState>(builder: (context, state) {
+              return _buildDateInput(context, "Adding date", (dateTime) {
+                _addItemBloc
+                    .add(AddItemAddingDateChangedEvent(dateTime: dateTime));
+              }, () => true);
+            }),
+            BlocBuilder<AddItemBloc, AddItemState>(builder: (context, state) {
+              return _buildDateInput(context, "Expiration date", (dateTime) {
+                _addItemBloc
+                    .add(AddItemExpirationDateChangedEvent(dateTime: dateTime));
+              }, () => state.isDateValid);
+            }),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0),
               width: double.infinity,
-              child: RaisedButton(
-                child: Text("Save"),
-                onPressed: () {},
+              child: BlocBuilder<AddItemBloc, AddItemState>(
+                builder: (context, state) {
+                  return RaisedButton(
+                    child: Text("Save"),
+                    onPressed: state.idFormValid ? () {
+                      print("ASdasd");
+                    } : null,
+                  );
+                },
               ),
             )
           ],
@@ -36,15 +65,14 @@ class AddItemPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDateInput(
-      BuildContext context, String hint, Function(DateTime) handler) {
+  Widget _buildDateInput(BuildContext context, String hint,
+      Function(DateTime) handler, Function validator) {
     return Container(
       margin: const EdgeInsets.all(15.0),
       child: DatePicker(
-        onDateSelected: (dateTime) {
-          debugPrint(dateTime.toString());
-        },
+        onDateSelected: handler,
         hint: hint,
+        validator: validator,
       ),
     );
   }
@@ -72,40 +100,47 @@ class NameInputWidget extends StatefulWidget {
 }
 
 class NameInputWidgetState extends State<NameInputWidget> {
+  AddItemBloc addItemBloc;
   final _controller = new TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    final addItemBloc = BlocProvider.of<AddItemBloc>(context);
-
+  void initState() {
+    super.initState();
+    addItemBloc = BlocProvider.of<AddItemBloc>(context);
     _controller.addListener(() {
       addItemBloc.add(AddItemNameEnteredEvent(name: _controller.text));
     });
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-      child: TextFormField(
-        maxLines: 1,
-        controller: _controller,
-        maxLength: 200,
-        onEditingComplete: () {},
-        decoration: InputDecoration(
-          labelText: 'Item name',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0),
-            ),
-          ),
-        ),
-      ),
-    );
   }
+
+  @override
+  Widget build(BuildContext context) => BlocBuilder<AddItemBloc, AddItemState>(
+        builder: (context, state) {
+          return Container(
+            margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+            child: TextFormField(
+              maxLines: 1,
+              controller: _controller,
+              maxLength: 200,
+              autovalidate: true,
+              validator: (_) {
+                return state.isNameValid ? null : "Name invalid";
+              },
+              decoration: InputDecoration(
+                labelText: 'Item name ${state.name}',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
-
 }
