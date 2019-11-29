@@ -11,7 +11,7 @@ class PantroidApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightGreen,
       ),
       initialRoute: HomePage.route,
       routes: {

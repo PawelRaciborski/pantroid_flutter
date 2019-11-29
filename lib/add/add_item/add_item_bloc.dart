@@ -17,14 +17,15 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
       case AddItemNameEnteredEvent:
         {
           var name = (event as AddItemNameEnteredEvent).name;
+          var isNameValid = _validateName(name);
           var editAddItemState = EditAddItemState(
             name,
             state.quantity,
             state.addingDate,
             state.expirationDate,
-            _validateName(name),
+            isNameValid,
             state.isDateValid,
-            _checkFormValid(state),
+            state.isDateValid && isNameValid,
           );
           yield editAddItemState;
           break;
@@ -32,14 +33,15 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
 
       case AddItemAddingDateChangedEvent:
         var addingDate = (event as AddItemAddingDateChangedEvent).dateTime;
+        var isDateValid = _validateDate(addingDate, state.expirationDate);
         var editAddItemState = EditAddItemState(
           state.name,
           state.quantity,
           addingDate,
           state.expirationDate,
           state.isNameValid,
-          _validateDate(addingDate, state.expirationDate),
-          _checkFormValid(state),
+          isDateValid,
+          state.isNameValid && isDateValid,
         );
         yield editAddItemState;
         break;
@@ -47,14 +49,15 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
       case AddItemExpirationDateChangedEvent:
         var expirationDate =
             (event as AddItemExpirationDateChangedEvent).dateTime;
+        var isDateValid = _validateDate(state.addingDate, expirationDate);
         var editAddItemState = EditAddItemState(
           state.name,
           state.quantity,
           state.addingDate,
           expirationDate,
           state.isNameValid,
-          _validateDate(state.addingDate, expirationDate),
-          _checkFormValid(state),
+          isDateValid,
+          state.isNameValid && isDateValid,
         );
         yield editAddItemState;
         break;
@@ -65,8 +68,4 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
 
   bool _validateDate(DateTime addingDate, DateTime expirationDate) =>
       addingDate.isBefore(expirationDate);
-
-  bool _checkFormValid(AddItemState state) {
-    return state.isNameValid && state.isDateValid;
-  }
 }

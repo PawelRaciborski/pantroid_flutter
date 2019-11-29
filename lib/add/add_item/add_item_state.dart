@@ -31,10 +31,10 @@ class InitialAddItemState extends AddItemState {
   int get quantity => 0;
 
   @override
-  bool get isNameValid => true;
+  bool get isNameValid => false;
 
   @override
-  bool get isDateValid => true;
+  bool get isDateValid => false;
 
   @override
   bool get idFormValid => false;
