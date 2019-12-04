@@ -1,95 +1,57 @@
 part of 'add_item_bloc.dart';
 
 @immutable
-abstract class AddItemState {
-  String get name;
+class AddItemState {
+  final String name;
+  final int quantity;
+  final DateTime addingDate;
+  final DateTime expirationDate;
+  final bool isNameValid;
+  final bool isDateValid;
+  final bool isFormValid;
+  final bool shouldFinish;
 
-  int get quantity;
+  const AddItemState({
+    @required this.name,
+    @required this.quantity,
+    @required this.addingDate,
+    @required this.expirationDate,
+    @required this.isNameValid,
+    @required this.isDateValid,
+    @required this.isFormValid,
+    @required this.shouldFinish,
+  });
 
-  DateTime get addingDate;
+  factory AddItemState.initial() {
+    return AddItemState(
+      name: null,
+      quantity: 0,
+      addingDate: DateTime.now(),
+      expirationDate: null,
+      isNameValid: true,
+      isDateValid: false,
+      isFormValid: false,
+      shouldFinish: false,
+    );
+  }
 
-  DateTime get expirationDate;
-
-  bool get isNameValid;
-
-  bool get isDateValid;
-
-  bool get idFormValid;
-
-  bool get shouldFinish;
-}
-
-class InitialAddItemState extends AddItemState {
-  @override
-  DateTime get addingDate => DateTime.now();
-
-  @override
-  DateTime get expirationDate => DateTime.now();
-
-  @override
-  String get name => "";
-
-  @override
-  int get quantity => 0;
-
-  @override
-  bool get isNameValid => true;
-
-  @override
-  bool get isDateValid => false;
-
-  @override
-  bool get idFormValid => false;
-
-  @override
-  bool get shouldFinish => false;
-}
-
-class EditAddItemState extends AddItemState {
-  final String _name;
-  final int _quantity;
-  final DateTime _addingDate;
-  final DateTime _expirationDate;
-  final bool _isNameValid;
-  final bool _isDateValid;
-  final bool _isFormValid;
-
-  EditAddItemState(
-    this._name,
-    this._quantity,
-    this._addingDate,
-    this._expirationDate,
-    this._isNameValid,
-    this._isDateValid,
-    this._isFormValid,
-  );
-
-  @override
-  DateTime get addingDate => _addingDate;
-
-  @override
-  DateTime get expirationDate => _expirationDate;
-
-  @override
-  String get name => _name;
-
-  @override
-  int get quantity => _quantity;
-
-  @override
-  bool get isNameValid => _isNameValid;
-
-  @override
-  bool get isDateValid => _isDateValid;
-
-  @override
-  bool get idFormValid => _isFormValid;
-
-  @override
-  bool get shouldFinish => false;
-}
-
-class FinishState extends InitialAddItemState {
-  @override
-  bool get shouldFinish => true;
+  AddItemState copyWith({
+    String name,
+    int quantity,
+    DateTime addingDate,
+    DateTime expirationDate,
+    bool isNameValid,
+    bool isDateValid,
+    bool isFormValid,
+    bool shouldFinish,
+  }) =>
+      AddItemState(
+          name: name ?? this.name,
+          quantity: quantity ?? this.quantity,
+          addingDate: addingDate ?? this.addingDate,
+          expirationDate: expirationDate ?? this.expirationDate,
+          isNameValid: isNameValid ?? this.isNameValid,
+          isDateValid: isDateValid ?? this.isDateValid,
+          isFormValid: isFormValid ?? this.isFormValid,
+          shouldFinish: shouldFinish ?? this.shouldFinish);
 }

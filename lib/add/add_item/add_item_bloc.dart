@@ -9,68 +9,54 @@ part 'add_item_state.dart';
 
 class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
   @override
-  AddItemState get initialState => InitialAddItemState();
+  AddItemState get initialState => AddItemState.initial();
 
   @override
   Stream<AddItemState> mapEventToState(AddItemEvent event) async* {
     switch (event.runtimeType) {
       case AddItemNameEnteredEvent:
         {
-          var name = (event as AddItemNameEnteredEvent).name;
-          var isNameValid =
-              state.isNameValid && _validateName(name, state.name);
-          var editAddItemState = EditAddItemState(
-            name,
-            state.quantity,
-            state.addingDate,
-            state.expirationDate,
-            isNameValid,
-            state.isDateValid,
-            state.isDateValid && isNameValid,
+          final name = (event as AddItemNameEnteredEvent).name;
+          final isNameValid = state.name == null || _validateName(name);
+          final newState = state.copyWith(
+            name: name,
+            isNameValid: isNameValid,
+            isFormValid: state.isDateValid && isNameValid,
           );
-          yield editAddItemState;
+          yield newState;
           break;
         }
 
       case AddItemAddingDateChangedEvent:
-        var addingDate = (event as AddItemAddingDateChangedEvent).dateTime;
-        var isDateValid = _validateDate(addingDate, state.expirationDate);
-        var editAddItemState = EditAddItemState(
-          state.name,
-          state.quantity,
-          addingDate,
-          state.expirationDate,
-          state.isNameValid,
-          isDateValid,
-          state.isNameValid && isDateValid,
+        final addingDate = (event as AddItemAddingDateChangedEvent).dateTime;
+        final isDateValid = _validateDate(addingDate, state.expirationDate);
+        final newState = state.copyWith(
+          addingDate: addingDate,
+          isDateValid: isDateValid,
+          isFormValid: state.isNameValid && isDateValid,
         );
-        yield editAddItemState;
+        yield newState;
         break;
 
       case AddItemExpirationDateChangedEvent:
-        var expirationDate =
+        final expirationDate =
             (event as AddItemExpirationDateChangedEvent).dateTime;
-        var isDateValid = _validateDate(state.addingDate, expirationDate);
-        var editAddItemState = EditAddItemState(
-          state.name,
-          state.quantity,
-          state.addingDate,
-          expirationDate,
-          state.isNameValid,
-          isDateValid,
-          state.isNameValid && isDateValid,
-        );
-        yield editAddItemState;
+        final isDateValid = _validateDate(state.addingDate, expirationDate);
+        final newState = state.copyWith(
+            expirationDate: expirationDate,
+            isDateValid: isDateValid,
+            isFormValid: state.isNameValid && isDateValid);
+        yield newState;
         break;
+
       case SubmitAddItemFormEvent:
-        //TODO: rethink form validation
-        yield FinishState();
+        final newState = state.copyWith(shouldFinish: true);
+        yield newState;
         break;
     }
   }
 
-  bool _validateName(String name, String previousName) =>
-      name == previousName || (name.isNotEmpty && name.length <= 200);
+  bool _validateName(String name) => name.isNotEmpty && name.length <= 200;
 
   bool _validateDate(DateTime addingDate, DateTime expirationDate) =>
       addingDate.isBefore(expirationDate);

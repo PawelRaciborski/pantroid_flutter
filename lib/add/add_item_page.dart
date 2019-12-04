@@ -50,8 +50,8 @@ class _AddItemPageState extends State<AddItemPage> {
               children: <Widget>[
                 _buildNameInput(state),
                 _buildQuantityInput(),
-                _buildAddingDateInput(context),
-                _buildExpirationDateInput(context, state),
+                _buildAddingDateInput(context, state.addingDate),
+                _buildExpirationDateInput(context, state.isDateValid),
                 _buildSaveButton(state),
               ],
             ),
@@ -66,7 +66,7 @@ class _AddItemPageState extends State<AddItemPage> {
       width: double.infinity,
       child: RaisedButton(
         child: Text("Save"),
-        onPressed: state.idFormValid
+        onPressed: state.isFormValid
             ? () {
                 _addItemBloc.add(SubmitAddItemFormEvent());
               }
@@ -92,10 +92,11 @@ class _AddItemPageState extends State<AddItemPage> {
         ),
       );
 
-  Widget _buildAddingDateInput(BuildContext context) => Container(
+  Widget _buildAddingDateInput(BuildContext context, DateTime addingDate) =>
+      Container(
         margin: const EdgeInsets.all(15.0),
         child: DatePicker(
-          selectedDate: DateTime.now(),
+          selectedDate: addingDate,
           onDateSelected: (dateTime) {
             _addItemBloc.add(AddItemAddingDateChangedEvent(dateTime: dateTime));
           },
@@ -104,7 +105,7 @@ class _AddItemPageState extends State<AddItemPage> {
         ),
       );
 
-  Widget _buildExpirationDateInput(BuildContext context, AddItemState state) =>
+  Widget _buildExpirationDateInput(BuildContext context, bool isDateValid) =>
       Container(
         margin: const EdgeInsets.all(15.0),
         child: DatePicker(
@@ -113,7 +114,7 @@ class _AddItemPageState extends State<AddItemPage> {
                 .add(AddItemExpirationDateChangedEvent(dateTime: dateTime));
           },
           hint: "Expiration date",
-          validator: () => state.isDateValid,
+          validator: () => isDateValid,
         ),
       );
 
