@@ -20,3 +20,5 @@ class AddItemExpirationDateChangedEvent extends AddItemEvent {
 
   AddItemExpirationDateChangedEvent({@required this.dateTime});
 }
+
+class SubmitAddItemFormEvent extends AddItemEvent {}

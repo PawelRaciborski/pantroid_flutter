@@ -39,48 +39,57 @@ class _AddItemPageState extends State<AddItemPage> {
       ),
       body: BlocProvider<AddItemBloc>(
         builder: (context) => _addItemBloc,
-        child: BlocBuilder<AddItemBloc, AddItemState>(
-          builder: (context, state) => Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
-                child: TextFormField(
-                  maxLines: 1,
-                  controller: _controller,
-                  maxLength: 200,
-                  autovalidate: true,
-                  validator: (_) => state.isNameValid ? null : "Name invalid",
-                  decoration: InputDecoration(
-                    labelText: 'Item name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
+        child: BlocListener<AddItemBloc, AddItemState>(
+          listener: (context, state) {
+            if (state.shouldFinish) {
+              Navigator.pop(context);
+            }
+          },
+          child: BlocBuilder<AddItemBloc, AddItemState>(
+            builder: (context, state) {
+              return Column(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 5),
+                    child: TextFormField(
+                      maxLines: 1,
+                      controller: _controller,
+                      maxLength: 200,
+                      autovalidate: true,
+                      validator: (_) => state.isNameValid ? null : "Name invalid",
+                      decoration: InputDecoration(
+                        labelText: 'Item name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              _buildQuantityInput(),
-              _buildDateInput(context, "Adding date", (dateTime) {
-                _addItemBloc
-                    .add(AddItemAddingDateChangedEvent(dateTime: dateTime));
-              }, () => true),
-              _buildDateInput(context, "Expiration date", (dateTime) {
-                _addItemBloc
-                    .add(AddItemExpirationDateChangedEvent(dateTime: dateTime));
-              }, () => state.isDateValid),
-              Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  width: double.infinity,
-                  child: RaisedButton(
-                    child: Text("Save"),
-                    onPressed: state.idFormValid
-                        ? () {
-                            //TODO: submit form
-                          }
-                        : null,
-                  )),
-            ],
+                  _buildQuantityInput(),
+                  _buildDateInput(context, "Adding date", (dateTime) {
+                    _addItemBloc
+                        .add(AddItemAddingDateChangedEvent(dateTime: dateTime));
+                  }, () => true),
+                  _buildDateInput(context, "Expiration date", (dateTime) {
+                    _addItemBloc.add(
+                        AddItemExpirationDateChangedEvent(dateTime: dateTime));
+                  }, () => state.isDateValid),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: double.infinity,
+                      child: RaisedButton(
+                        child: Text("Save"),
+                        onPressed: state.idFormValid
+                            ? () {
+                                _addItemBloc.add(SubmitAddItemFormEvent());
+                              }
+                            : null,
+                      )),
+                ],
+              );
+            },
           ),
         ),
       ),

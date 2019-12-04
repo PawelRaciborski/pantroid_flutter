@@ -61,6 +61,9 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         );
         yield editAddItemState;
         break;
+      case SubmitAddItemFormEvent:
+        yield FinishState();
+        break;
     }
   }
 

@@ -15,6 +15,8 @@ abstract class AddItemState {
   bool get isDateValid;
 
   bool get idFormValid;
+
+  bool get shouldFinish;
 }
 
 class InitialAddItemState extends AddItemState {
@@ -38,6 +40,9 @@ class InitialAddItemState extends AddItemState {
 
   @override
   bool get idFormValid => false;
+
+  @override
+  bool get shouldFinish => false;
 }
 
 class EditAddItemState extends AddItemState {
@@ -56,7 +61,7 @@ class EditAddItemState extends AddItemState {
     this._expirationDate,
     this._isNameValid,
     this._isDateValid,
-      this._isFormValid,
+    this._isFormValid,
   );
 
   @override
@@ -79,4 +84,12 @@ class EditAddItemState extends AddItemState {
 
   @override
   bool get idFormValid => _isFormValid;
+
+  @override
+  bool get shouldFinish => false;
+}
+
+class FinishState extends InitialAddItemState {
+  @override
+  bool get shouldFinish => true;
 }
