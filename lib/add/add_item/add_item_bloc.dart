@@ -17,7 +17,8 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
       case AddItemNameEnteredEvent:
         {
           var name = (event as AddItemNameEnteredEvent).name;
-          var isNameValid = _validateName(name);
+          var isNameValid =
+              state.isNameValid && _validateName(name, state.name);
           var editAddItemState = EditAddItemState(
             name,
             state.quantity,
@@ -62,12 +63,14 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         yield editAddItemState;
         break;
       case SubmitAddItemFormEvent:
+        //TODO: rethink form validation
         yield FinishState();
         break;
     }
   }
 
-  bool _validateName(String name) => name.isNotEmpty && name.length <= 200;
+  bool _validateName(String name, String previousName) =>
+      name == previousName || (name.isNotEmpty && name.length <= 200);
 
   bool _validateDate(DateTime addingDate, DateTime expirationDate) =>
       addingDate.isBefore(expirationDate);

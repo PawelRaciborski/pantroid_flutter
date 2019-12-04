@@ -33,7 +33,7 @@ class InitialAddItemState extends AddItemState {
   int get quantity => 0;
 
   @override
-  bool get isNameValid => false;
+  bool get isNameValid => true;
 
   @override
   bool get isDateValid => false;
