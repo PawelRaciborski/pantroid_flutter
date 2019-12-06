@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 class DatePicker extends StatefulWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
+  final Function validator;
   final String hint;
 
   DatePicker(
-      {this.selectedDate, @required this.onDateSelected, @required this.hint});
+      {this.selectedDate, @required this.onDateSelected, @required this.hint, this.validator});
 
   @override
   State<StatefulWidget> createState() =>
@@ -38,25 +39,25 @@ class DatePickerState extends State<DatePicker> {
           Expanded(
             child: Text(
               _displayText,
+              style: TextStyle(color: widget.validator() ?? true ? Colors.black: Colors.red,),
             ),
           ),
           Icon(Icons.calendar_today),
         ],
       ),
-      onTap: () => _showDatePicker(context, selectedDate, (dateTime) {
-        setState(() {
-          selectedDate = dateTime;
-        });
-        widget.onDateSelected(dateTime);
-      }),
+      onTap: () =>
+          _showDatePicker(context, selectedDate, (dateTime) {
+            setState(() {
+              selectedDate = dateTime;
+            });
+            widget.onDateSelected(dateTime);
+          }),
     );
   }
 
-  Future<void> _showDatePicker(
-    BuildContext context,
-    DateTime initialDate,
-    Function(DateTime) onDateSelected,
-  ) async {
+  Future<void> _showDatePicker(BuildContext context,
+      DateTime initialDate,
+      Function(DateTime) onDateSelected,) async {
     final DateTime picked = await showDatePicker(
       context: context,
       firstDate: DateTime.fromMillisecondsSinceEpoch(0),
