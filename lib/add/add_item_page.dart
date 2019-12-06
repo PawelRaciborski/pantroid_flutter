@@ -6,7 +6,7 @@ import 'package:pantroid/di/injector.dart';
 
 import 'date_picker.dart';
 
-class AddItemPage extends StatefulWidget with DInjector {
+class AddItemPage extends StatefulWidget {
   static const route = "/add";
 
   @override
@@ -20,7 +20,7 @@ class _AddItemPageState extends State<AddItemPage> {
   @override
   void initState() {
     super.initState();
-    _addItemBloc = widget.inject<AddItemBloc>();
+    _addItemBloc = inject<AddItemBloc>();
     _controller.addListener(() {
       _addItemBloc.add(AddItemNameEnteredEvent(name: _controller.text));
     });
