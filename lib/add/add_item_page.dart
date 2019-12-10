@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pantroid/add/add_item/add_item_bloc.dart';
+import 'package:pantroid/add/bloc/add_item_bloc.dart';
+import 'package:pantroid/di/injector.dart';
 
 import 'date_picker.dart';
 
@@ -19,7 +20,7 @@ class _AddItemPageState extends State<AddItemPage> {
   @override
   void initState() {
     super.initState();
-    _addItemBloc = AddItemBloc();
+    _addItemBloc = inject<AddItemBloc>();
     _controller.addListener(() {
       _addItemBloc.add(AddItemNameEnteredEvent(name: _controller.text));
     });
@@ -38,7 +39,7 @@ class _AddItemPageState extends State<AddItemPage> {
         title: Text("Add new item"),
       ),
       body: BlocProvider<AddItemBloc>(
-        builder: (context) => _addItemBloc,
+        create: (context) => _addItemBloc,
         child: BlocListener<AddItemBloc, AddItemState>(
           listener: (context, state) {
             if (state.shouldFinish) {

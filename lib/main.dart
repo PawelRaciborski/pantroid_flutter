@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:pantroid/add/add_item_page.dart';
+import 'package:pantroid/di/injector.dart';
+import 'package:pantroid/di/modules.dart';
 import 'package:pantroid/home/home_page.dart';
 
-void main() => runApp(PantroidApp());
+void main() {
+  Injector.getInjector().addModule(BlocModule()).addModule(UseCaseModule());
+
+  runApp(PantroidApp());
+}
 
 class PantroidApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -2,12 +2,18 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pantroid/add/usecases.dart';
+import 'package:pantroid/model/item.dart';
 
 part 'add_item_event.dart';
 
 part 'add_item_state.dart';
 
 class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
+  final SaveItemUseCase _saveItemUseCase;
+
+  AddItemBloc(this._saveItemUseCase);
+
   @override
   AddItemState get initialState => AddItemState.initial();
 
@@ -50,8 +56,22 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         break;
 
       case SubmitAddItemFormEvent:
-        final newState = state.copyWith(shouldFinish: true);
-        yield newState;
+        final item = Item(
+          state.name,
+          state.quantity,
+          state.addingDate,
+          state.addingDate,
+        );
+
+        try {
+          //TODO: add some progress indicator
+          await (_saveItemUseCase..initialize(item)).execute();
+          final newState = state.copyWith(shouldFinish: true);
+          yield newState;
+        } on Exception catch (exception) {
+          //TODO: Handle data writing exceptions
+        }
+
         break;
     }
   }
