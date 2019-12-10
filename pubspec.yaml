@@ -26,6 +26,7 @@ dependencies:
   intl: ^0.16.0
   flutter_bloc: ^2.1.1
   flutter_simple_dependency_injection: ^1.0.1
+  rxdart: ^0.22.6
 
 dev_dependencies:
   flutter_test:

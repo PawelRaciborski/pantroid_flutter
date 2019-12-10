@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:pantroid/add/add_item_page.dart';
-import 'package:pantroid/add/bloc/add_item_bloc.dart';
+import 'package:pantroid/di/injector.dart';
+import 'package:pantroid/di/modules.dart';
 import 'package:pantroid/home/home_page.dart';
 
 void main() {
-  final injector = ModuleContainer().initialise(Injector.getInjector());
+  Injector.getInjector().addModule(BlocModule()).addModule(UseCaseModule());
 
-  print(injector.get<String>(key: "asdasd"));
   runApp(PantroidApp());
-}
-
-class ModuleContainer {
-  Injector initialise(Injector injector) {
-    return injector
-      ..map<String>((i) => "Jajeczko", key: "asdasd")
-      ..map<AddItemBloc>((i) => AddItemBloc());
-  }
 }
 
 class PantroidApp extends StatelessWidget {
