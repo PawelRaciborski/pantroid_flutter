@@ -64,6 +64,7 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         );
 
         try {
+          //TODO: add some progress indicator
           await (_saveItemUseCase..initialize(item)).execute();
           final newState = state.copyWith(shouldFinish: true);
           yield newState;

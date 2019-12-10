@@ -16,7 +16,7 @@ class SaveItemUseCaseImpl implements SaveItemUseCase {
   @override
   Future<Item> execute() => _item != null
       //TODO: provide real implementation
-      ? Future.delayed(const Duration(seconds: 5), () => _item)
+      ? Future.value(_item)
       : Future.error(
           UninitializedUseCaseException("Item not set for SaveItemUseCase"),
         );
