@@ -7,7 +7,7 @@ abstract class Repository<T> {
 }
 
 class ItemRepository implements Repository<Item> {
-  static const _boxName = "ITEMS_BOX";
+  static const boxName = "ITEMS_BOX";
   bool isInitialized = false;
 
   Future<Box<Item>> get _box async {
@@ -17,13 +17,12 @@ class ItemRepository implements Repository<Item> {
       Hive.registerAdapter(ItemAdapter(), 0);
       isInitialized = true;
     }
-    return Hive.openBox<Item>(_boxName);
+    return Hive.openBox<Item>(boxName);
   }
 
   @override
   Future<int> addItem(Item item) async {
     final box = await _box;
-
     return box.add(item);
   }
 }
