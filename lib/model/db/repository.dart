@@ -4,6 +4,8 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 
 abstract class Repository<T> {
   Future<int> addItem(T item);
+
+  Stream<List<Item>> getAllItems();
 }
 
 class ItemRepository implements Repository<Item> {
@@ -24,5 +26,13 @@ class ItemRepository implements Repository<Item> {
   Future<int> addItem(Item item) async {
     final box = await _box;
     return box.add(item);
+  }
+
+  @override
+  Stream<List<Item>> getAllItems() async* {
+    final box = await _box;
+    final List<Item> elements =
+        List<Item>.generate(box.length, (i) => box.getAt(i));
+    yield elements;
   }
 }
