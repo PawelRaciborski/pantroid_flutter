@@ -16,6 +16,7 @@ class AddItemPage extends StatefulWidget {
 class _AddItemPageState extends State<AddItemPage> {
   AddItemBloc _addItemBloc;
   final _controller = new TextEditingController();
+  final _quantityController = new TextEditingController();
 
   @override
   void initState() {
@@ -24,11 +25,16 @@ class _AddItemPageState extends State<AddItemPage> {
     _controller.addListener(() {
       _addItemBloc.add(AddItemNameEnteredEvent(name: _controller.text));
     });
+    _quantityController.addListener(() {
+      _addItemBloc
+          .add(AddItemQuantityChangedEvent(quantity: _quantityController.text));
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _quantityController.dispose();
     super.dispose();
   }
 
@@ -122,6 +128,7 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget _buildQuantityInput() => Container(
         margin: const EdgeInsets.all(5.0),
         child: TextFormField(
+          controller: _quantityController,
           keyboardType: TextInputType.number,
           inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
           decoration: InputDecoration(

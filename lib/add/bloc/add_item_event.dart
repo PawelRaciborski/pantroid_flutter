@@ -9,6 +9,12 @@ class AddItemNameEnteredEvent extends AddItemEvent {
   AddItemNameEnteredEvent({@required this.name});
 }
 
+class AddItemQuantityChangedEvent extends AddItemEvent {
+  final String quantity;
+
+  AddItemQuantityChangedEvent({@required this.quantity});
+}
+
 class AddItemAddingDateChangedEvent extends AddItemEvent {
   final DateTime dateTime;
 

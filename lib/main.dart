@@ -6,7 +6,10 @@ import 'package:pantroid/di/modules.dart';
 import 'package:pantroid/home/home_page.dart';
 
 void main() {
-  Injector.getInjector().addModule(BlocModule()).addModule(UseCaseModule());
+  Injector.getInjector()
+      .addModule(BlocModule())
+      .addModule(UseCaseModule())
+      .addModule(DatabaseModule());
 
   runApp(PantroidApp());
 }

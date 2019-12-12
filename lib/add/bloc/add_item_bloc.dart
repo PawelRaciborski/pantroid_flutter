@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:pantroid/add/usecases.dart';
+import 'package:pantroid/add/save_item_usecase.dart';
 import 'package:pantroid/model/item.dart';
 
 part 'add_item_event.dart';
@@ -21,17 +21,26 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
   Stream<AddItemState> mapEventToState(AddItemEvent event) async* {
     switch (event.runtimeType) {
       case AddItemNameEnteredEvent:
-        {
-          final name = (event as AddItemNameEnteredEvent).name;
-          final isNameValid = state.name == null || _validateName(name);
-          final newState = state.copyWith(
-            name: name,
-            isNameValid: isNameValid,
-            isFormValid: state.isDateValid && isNameValid,
-          );
-          yield newState;
-          break;
-        }
+        final name = (event as AddItemNameEnteredEvent).name;
+        final isNameValid = state.name == null || _validateName(name);
+        final newState = state.copyWith(
+          name: name,
+          shouldFinish: false,
+          isNameValid: isNameValid,
+          isFormValid: state.isDateValid && isNameValid,
+        );
+        yield newState;
+        break;
+
+      case AddItemQuantityChangedEvent:
+        final quantityString = (event as AddItemQuantityChangedEvent).quantity;
+        // Quietly ignoring parse exception
+        final quantity = int.tryParse(quantityString) ?? 0;
+
+        final newState =
+            state.copyWith(shouldFinish: false, quantity: quantity);
+        yield newState;
+        break;
 
       case AddItemAddingDateChangedEvent:
         final addingDate = (event as AddItemAddingDateChangedEvent).dateTime;
