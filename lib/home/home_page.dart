@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pantroid"),
       ),
-      body: _buildList(),
+      body: Text("asd"), //_buildList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -32,17 +32,17 @@ class HomePage extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               var item = box.getAt(index);
               return _buildListItem(item, () {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text("Item [$index] \"${item.name}\" clicked"),
-                  ));
-                });
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("Item [$index] \"${item.name}\" clicked"),
+                ));
+              });
             });
       });
 
   Widget _buildListItem(Item item, Function onTap) => ListTile(
         title: Text(item.name),
         subtitle: Text(
-            "Quantiyu: ${item.quantity}, expiration date: ${item.expirationDate}"),
+            "Quantity: ${item.quantity}, expiration date: ${item.expirationDate}"),
         trailing: Icon(Icons.ac_unit),
         onTap: onTap,
       );
