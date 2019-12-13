@@ -7,6 +7,10 @@ extension StateInjectorExtension on State {
   T inject<T>() => Injector.getInjector().get<T>();
 }
 
+extension StatelessWidgetInjectorExtension on StatelessWidget {
+  T inject<T>() => Injector.getInjector().get<T>();
+}
+
 extension InjectorExtension on Injector {
   Injector addModule(Module module) => module.initialise(this);
 }

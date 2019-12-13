@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pantroid/add/add_item_page.dart';
-import 'package:pantroid/model/db/repository.dart';
+import 'package:pantroid/di/injector.dart';
+import 'package:pantroid/home/bloc/home_bloc.dart';
 import 'package:pantroid/model/item.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pantroid"),
       ),
-      body: Text("asd"), //_buildList(),
+      body: _buildList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -24,20 +24,27 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildList() => WatchBoxBuilder(
-      box: Hive.box<Item>(ItemRepository.boxName),
-      builder: (context, box) {
-        return ListView.builder(
-            itemCount: box.length,
+  Widget _buildList() => BlocProvider<HomeBloc>(
+        create: (_) => inject<HomeBloc>(),
+        child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+          return ListView.builder(
+            itemCount: state.displayItems.length,
             itemBuilder: (BuildContext context, int index) {
-              var item = box.getAt(index);
-              return _buildListItem(item, () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Item [$index] \"${item.name}\" clicked"),
-                ));
-              });
-            });
-      });
+              var item = state.displayItems[index];
+              return _buildListItem(
+                item,
+                () {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Item [$index] \"${item.name}\" clicked"),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        }),
+      );
 
   Widget _buildListItem(Item item, Function onTap) => ListTile(
         title: Text(item.name),
