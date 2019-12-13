@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:pantroid/model/item.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:rxdart/rxdart.dart';
 
 abstract class Repository<T> {
   Future<int> addItem(T item);
@@ -9,30 +9,35 @@ abstract class Repository<T> {
 }
 
 class ItemRepository implements Repository<Item> {
-  static const boxName = "ITEMS_BOX";
+
+  final Box<Item> box;
+
   bool isInitialized = false;
+  BehaviorSubject<List<Item>> _getAllSubject;
 
-  Future<Box<Item>> get _box async {
-    if (!isInitialized) {
-      final path = await path_provider.getApplicationDocumentsDirectory();
-      Hive.init(path.path);
-      Hive.registerAdapter(ItemAdapter(), 0);
-      isInitialized = true;
+  ItemRepository(this.box);
+
+  @override
+  Future<int> addItem(Item item) async => box.add(item);
+
+  @override
+  Stream<List<Item>> getAllItems() {
+    if (_getAllSubject == null) {
+      _getAllSubject = BehaviorSubject<List<Item>>();
     }
-    return Hive.openBox<Item>(boxName);
-  }
 
-  @override
-  Future<int> addItem(Item item) async {
-    final box = await _box;
-    return box.add(item);
-  }
+    _getAllSubject.add(box.getAll<Item>());
 
-  @override
-  Stream<List<Item>> getAllItems() async* {
-    final box = await _box;
-    final List<Item> elements =
-        List<Item>.generate(box.length, (i) => box.getAt(i));
-    yield elements;
+    _getAllSubject.addStream(box.watch().map((_)=> box.getAll<Item>()));
+
+    return _getAllSubject.stream;
   }
+}
+
+extension _BoxExtension on Box {
+  List<T> getAll<T>() =>
+      List<T>.generate(
+        length,
+            (i) => getAt(i),
+      );
 }
