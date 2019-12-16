@@ -30,12 +30,14 @@ dependencies:
   hive_flutter: ^0.2.1
   path_provider: ^1.5.1
   rxdart: ^0.22.6
+  moor_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   hive_generator: ^0.5.2
+  moor_generator: ^2.1.1
   build_runner: ^1.7.2
 
 

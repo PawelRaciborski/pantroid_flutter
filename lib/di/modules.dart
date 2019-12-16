@@ -7,6 +7,7 @@ import 'package:pantroid/home/get_items_usecase.dart';
 import 'package:pantroid/model/db/hive_extension.dart';
 import 'package:pantroid/model/db/repository.dart';
 import 'package:pantroid/model/item.dart';
+import 'package:pantroid/model/tables.dart';
 
 abstract class Module {
   Injector initialise(Injector injector);
@@ -22,9 +23,9 @@ class UseCaseModule implements Module {
   @override
   Injector initialise(Injector injector) => injector
     ..map<SaveItemUseCase>(
-        (i) => SaveItemUseCaseImpl(i.get<Repository<Item>>()))
+        (i) => SaveItemUseCaseImpl(i.get<Repository<MoorItem, MoorItemsCompanion>>()))
     ..map<GetItemsUseCase>(
-        (i) => GetItemsUseCaseImpl(i.get<Repository<Item>>()));
+        (i) => GetItemsUseCaseImpl(i.get<Repository<MoorItem, MoorItemsCompanion>>()));
 }
 
 class DatabaseModule implements Module {
@@ -34,8 +35,13 @@ class DatabaseModule implements Module {
       (i) => Hive.defaultBox<Item>(),
       isSingleton: true,
     )
-    ..map<Repository<Item>>(
+    ..map<Database>((i) => Database(), isSingleton: true)
+    ..map<Repository<Item, Item>>(
       (i) => ItemRepository(i.get<Box<Item>>()),
+      isSingleton: true,
+    )
+    ..map<Repository<MoorItem, MoorItemsCompanion>>(
+      (i) => MoorItemRepository(i.get<Database>()),
       isSingleton: true,
     );
 }

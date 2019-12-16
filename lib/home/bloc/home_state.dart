@@ -3,7 +3,7 @@ part of 'home_bloc.dart';
 @immutable
 class HomeState {
   final bool isLoading;
-  final List<Item> displayItems;
+  final List<MoorItem> displayItems;
 
   const HomeState({
     @required this.isLoading,
@@ -17,7 +17,7 @@ class HomeState {
 
   HomeState copyWith({
     bool isLoading,
-    List<Item> displayItems,
+    List<MoorItem> displayItems,
   }) =>
       HomeState(
         isLoading: isLoading ?? this.isLoading,

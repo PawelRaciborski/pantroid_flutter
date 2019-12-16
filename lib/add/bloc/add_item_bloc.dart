@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pantroid/add/save_item_usecase.dart';
 import 'package:pantroid/model/item.dart';
+import 'package:pantroid/model/tables.dart';
 
 part 'add_item_event.dart';
 
@@ -65,11 +66,11 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         break;
 
       case SubmitAddItemFormEvent:
-        final item = Item(
-          state.name,
-          state.quantity,
-          state.addingDate,
-          state.addingDate,
+        final item = MoorItemsCompanion.insert(
+          name: state.name,
+          quantity:  state.quantity,
+          addingDate: state.addingDate,
+          expirationDate:  state.addingDate,
         );
 
         try {

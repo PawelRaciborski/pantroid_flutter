@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pantroid/add/add_item_page.dart';
 import 'package:pantroid/di/injector.dart';
 import 'package:pantroid/home/bloc/home_bloc.dart';
-import 'package:pantroid/model/item.dart';
+import 'package:pantroid/model/tables.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomePage extends StatelessWidget {
   static const route = "/";
@@ -46,7 +48,7 @@ class HomePage extends StatelessWidget {
         }),
       );
 
-  Widget _buildListItem(Item item, Function onTap) => ListTile(
+  Widget _buildListItem(MoorItem item, Function onTap) => ListTile(
         title: Text(item.name),
         subtitle: Text(
             "Quantity: ${item.quantity}, expiration date: ${item.expirationDate}"),
