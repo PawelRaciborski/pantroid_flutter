@@ -2,13 +2,13 @@ import 'package:pantroid/model/db/repository.dart';
 import 'package:pantroid/model/tables.dart';
 import 'package:pantroid/usecases/base_usecases.dart';
 
-abstract class GetItemsUseCase implements StreamUseCase<List<MoorItem>> {}
+abstract class GetItemsUseCase implements StreamUseCase<List<Item>> {}
 
 class GetItemsUseCaseImpl implements GetItemsUseCase {
-  final Repository<MoorItem> _repository;
+  final Repository<Item> _repository;
 
   GetItemsUseCaseImpl(this._repository);
 
   @override
-  Stream<List<MoorItem>> execute() => _repository.getAllItems();
+  Stream<List<Item>> execute() => _repository.getAllItems();
 }

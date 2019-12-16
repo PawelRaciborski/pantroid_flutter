@@ -20,17 +20,17 @@ class UseCaseModule implements Module {
   @override
   Injector initialise(Injector injector) => injector
     ..map<SaveItemUseCase>(
-        (i) => SaveItemUseCaseImpl(i.get<Repository<MoorItem>>()))
+        (i) => SaveItemUseCaseImpl(i.get<Repository<Item>>()))
     ..map<GetItemsUseCase>(
-        (i) => GetItemsUseCaseImpl(i.get<Repository<MoorItem>>()));
+        (i) => GetItemsUseCaseImpl(i.get<Repository<Item>>()));
 }
 
 class DatabaseModule implements Module {
   @override
   Injector initialise(Injector injector) => injector
     ..map<Database>((i) => Database(), isSingleton: true)
-    ..map<Repository<MoorItem>>(
-      (i) => MoorItemRepository(i.get<Database>()),
+    ..map<Repository<Item>>(
+      (i) => ItemRepository(i.get<Database>()),
       isSingleton: true,
     );
 }

@@ -4,7 +4,7 @@ part of 'home_bloc.dart';
 abstract class HomeEvent {}
 
 class ListUpdatedHomeEvent implements HomeEvent {
-  final List<MoorItem> items;
+  final List<Item> items;
 
   ListUpdatedHomeEvent(this.items);
 }

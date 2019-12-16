@@ -3,18 +3,18 @@ import 'package:pantroid/model/tables.dart';
 import 'package:pantroid/usecases/base_usecases.dart';
 
 abstract class SaveItemUseCase implements FutureUseCase<int> {
-  void initialize(MoorItemsCompanion item);
+  void initialize(ItemsCompanion item);
 }
 
 class SaveItemUseCaseImpl implements SaveItemUseCase {
-  MoorItemsCompanion _item;
+  ItemsCompanion _item;
 
-  final Repository<MoorItem> _repository;
+  final Repository<Item> _repository;
 
   SaveItemUseCaseImpl(this._repository);
 
   @override
-  void initialize(MoorItemsCompanion item) {
+  void initialize(ItemsCompanion item) {
     _item = item;
   }
 

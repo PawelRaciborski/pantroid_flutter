@@ -65,7 +65,7 @@ class AddItemBloc extends Bloc<AddItemEvent, AddItemState> {
         break;
 
       case SubmitAddItemFormEvent:
-        final item = MoorItemsCompanion.insert(
+        final item = ItemsCompanion.insert(
           name: state.name,
           quantity:  state.quantity,
           addingDate: state.addingDate,

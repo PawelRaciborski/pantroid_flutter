@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
         }),
       );
 
-  Widget _buildListItem(MoorItem item, Function onTap) => ListTile(
+  Widget _buildListItem(Item item, Function onTap) => ListTile(
         title: Text(item.name),
         subtitle: Text(
             "Quantity: ${item.quantity}, expiration date: ${item.expirationDate}"),

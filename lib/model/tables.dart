@@ -2,7 +2,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 part 'tables.g.dart';
 
-class MoorItems extends Table {
+class Items extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   TextColumn get name => text().withLength(min: 1, max: 200)();
@@ -14,7 +14,7 @@ class MoorItems extends Table {
   DateTimeColumn get expirationDate => dateTime()();
 }
 
-@UseMoor(tables: [MoorItems])
+@UseMoor(tables: [Items])
 class Database extends _$Database {
   Database()
       : super(FlutterQueryExecutor.inDatabaseFolder(
@@ -23,7 +23,7 @@ class Database extends _$Database {
   @override
   int get schemaVersion => 1;
 
-  Future<int> addItem(MoorItemsCompanion entry) => into(moorItems).insert(entry);
+  Future<int> addItem(ItemsCompanion entry) => into(items).insert(entry);
 
-  Stream<List<MoorItem>> getAllItems() => select(moorItems).watch();
+  Stream<List<Item>> getAllItems() => select(items).watch();
 }
