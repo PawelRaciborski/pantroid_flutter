@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pantroid/home/get_items_usecase.dart';
-import 'package:pantroid/model/item.dart';
 import 'package:pantroid/model/tables.dart';
 
 part 'home_event.dart';
