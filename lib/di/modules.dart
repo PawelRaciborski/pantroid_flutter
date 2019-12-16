@@ -1,7 +1,10 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:hive/hive.dart';
 import 'package:pantroid/add/bloc/add_item_bloc.dart';
 import 'package:pantroid/add/save_item_usecase.dart';
+import 'package:pantroid/home/bloc/home_bloc.dart';
 import 'package:pantroid/home/get_items_usecase.dart';
+import 'package:pantroid/model/db/hive_extension.dart';
 import 'package:pantroid/model/db/repository.dart';
 import 'package:pantroid/model/item.dart';
 
@@ -10,8 +13,9 @@ abstract class Module {
 }
 
 class BlocModule implements Module {
-  Injector initialise(Injector injector) =>
-      injector..map<AddItemBloc>((i) => AddItemBloc(i.get<SaveItemUseCase>()));
+  Injector initialise(Injector injector) => injector
+    ..map<AddItemBloc>((i) => AddItemBloc(i.get<SaveItemUseCase>()))
+    ..map<HomeBloc>((i) => HomeBloc(i.get<GetItemsUseCase>()));
 }
 
 class UseCaseModule implements Module {
@@ -26,5 +30,12 @@ class UseCaseModule implements Module {
 class DatabaseModule implements Module {
   @override
   Injector initialise(Injector injector) => injector
-    ..map<Repository<Item>>((i) => ItemRepository(), isSingleton: true);
+    ..map<Box<Item>>(
+      (i) => Hive.defaultBox<Item>(),
+      isSingleton: true,
+    )
+    ..map<Repository<Item>>(
+      (i) => ItemRepository(i.get<Box<Item>>()),
+      isSingleton: true,
+    );
 }
