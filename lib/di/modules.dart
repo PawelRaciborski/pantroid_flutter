@@ -1,12 +1,10 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:hive/hive.dart';
 import 'package:pantroid/add/bloc/add_item_bloc.dart';
 import 'package:pantroid/add/save_item_usecase.dart';
 import 'package:pantroid/home/bloc/home_bloc.dart';
 import 'package:pantroid/home/get_items_usecase.dart';
-import 'package:pantroid/model/db/hive_extension.dart';
 import 'package:pantroid/model/db/repository.dart';
-import 'package:pantroid/model/item.dart';
+import 'package:pantroid/model/tables.dart';
 
 abstract class Module {
   Injector initialise(Injector injector);
@@ -30,12 +28,9 @@ class UseCaseModule implements Module {
 class DatabaseModule implements Module {
   @override
   Injector initialise(Injector injector) => injector
-    ..map<Box<Item>>(
-      (i) => Hive.defaultBox<Item>(),
-      isSingleton: true,
-    )
+    ..map<Database>((i) => Database(), isSingleton: true)
     ..map<Repository<Item>>(
-      (i) => ItemRepository(i.get<Box<Item>>()),
+      (i) => ItemRepository(i.get<Database>()),
       isSingleton: true,
     );
 }

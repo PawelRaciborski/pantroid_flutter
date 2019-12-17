@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pantroid/add/add_item_page.dart';
 import 'package:pantroid/di/injector.dart';
 import 'package:pantroid/home/bloc/home_bloc.dart';
-import 'package:pantroid/model/item.dart';
+import 'package:pantroid/model/tables.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomePage extends StatelessWidget {
   static const route = "/";
