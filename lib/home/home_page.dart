@@ -38,19 +38,9 @@ class HomePage extends StatelessWidget {
                 item,
                 () {
                   bloc.add(ItemAddedHomeEvent(item));
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Added item [$index] \"${item.name}\""),
-                    ),
-                  );
                 },
                 () {
                   bloc.add(ItemRemovedHomeEvent(item));
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Removed item [$index] \"${item.name}\""),
-                    ),
-                  );
                 },
               );
             },
