@@ -32,10 +32,12 @@ class HomePage extends StatelessWidget {
           return ListView.builder(
             itemCount: state.displayItems.length,
             itemBuilder: (BuildContext context, int index) {
-              var item = state.displayItems[index];
+              final item = state.displayItems[index];
+              final bloc = BlocProvider.of<HomeBloc>(context);
               return _buildListItem(
                 item,
                 () {
+                  bloc.add(ItemAddedHomeEvent(item));
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Added item [$index] \"${item.name}\""),
@@ -43,6 +45,7 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 () {
+                  bloc.add(ItemRemovedHomeEvent(item));
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Removed item [$index] \"${item.name}\""),
@@ -55,27 +58,25 @@ class HomePage extends StatelessWidget {
         }),
       );
 
-  Widget _buildListItem(Item item, Function onAdd, Function onRemove) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(item.name),
-              Text("Quantity: ${item.quantity}"),
-            ],
+  Widget _buildListItem(Item item, Function onAdd, Function onRemove) => Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(item.name),
+                Text("Quantity: ${item.quantity}"),
+              ],
+            ),
           ),
-        ),
-        RaisedButton(
-          child: Icon(Icons.add),
-          onPressed: onAdd,
-        ),
-        RaisedButton(
-          child: Icon(Icons.remove),
-          onPressed: onRemove,
-        ),
-      ],
-    );
-  }
+          RaisedButton(
+            child: Icon(Icons.add),
+            onPressed: onAdd,
+          ),
+          RaisedButton(
+            child: Icon(Icons.remove),
+            onPressed: onRemove,
+          ),
+        ],
+      );
 }

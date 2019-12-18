@@ -30,6 +30,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final items = (event as ListUpdatedHomeEvent).items;
         yield state.copyWith(isLoading: false, displayItems: items);
         break;
+      case ItemAddedHomeEvent:
+        print("handle me");
+        break;
+      case ItemRemovedHomeEvent:
+        print("handle me");
+        break;
     }
   }
 
