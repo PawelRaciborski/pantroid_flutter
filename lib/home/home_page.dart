@@ -38,7 +38,14 @@ class HomePage extends StatelessWidget {
                 () {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("Item [$index] \"${item.name}\" clicked"),
+                      content: Text("Added item [$index] \"${item.name}\""),
+                    ),
+                  );
+                },
+                () {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Removed item [$index] \"${item.name}\""),
                     ),
                   );
                 },
@@ -48,11 +55,27 @@ class HomePage extends StatelessWidget {
         }),
       );
 
-  Widget _buildListItem(Item item, Function onTap) => ListTile(
-        title: Text(item.name),
-        subtitle: Text(
-            "Quantity: ${item.quantity}, expiration date: ${item.expirationDate}"),
-        trailing: Icon(Icons.ac_unit),
-        onTap: onTap,
-      );
+  Widget _buildListItem(Item item, Function onAdd, Function onRemove) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(item.name),
+              Text("Quantity: ${item.quantity}"),
+            ],
+          ),
+        ),
+        RaisedButton(
+          child: Icon(Icons.add),
+          onPressed: onAdd,
+        ),
+        RaisedButton(
+          child: Icon(Icons.remove),
+          onPressed: onRemove,
+        ),
+      ],
+    );
+  }
 }
