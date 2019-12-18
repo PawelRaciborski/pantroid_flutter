@@ -26,4 +26,8 @@ class Database extends _$Database {
   Future<int> addItem(ItemsCompanion entry) => into(items).insert(entry);
 
   Stream<List<Item>> getAllItems() => select(items).watch();
+
+  Future<bool> updateItem(Item item) {
+    return update(items).replace(item);
+  }
 }

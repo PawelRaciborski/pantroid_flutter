@@ -5,6 +5,8 @@ abstract class Repository<T extends Item> {
   Future<int> addItem(UpdateCompanion<T> item);
 
   Stream<List<T>> getAllItems();
+
+  Future<bool> updateItem(T item);
 }
 
 class ItemRepository implements Repository<Item> {
@@ -17,4 +19,7 @@ class ItemRepository implements Repository<Item> {
 
   @override
   Stream<List<Item>> getAllItems() => db.getAllItems();
+
+  @override
+  Future<bool> updateItem(Item item) => db.updateItem(item);
 }
