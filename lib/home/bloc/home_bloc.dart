@@ -12,11 +12,13 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetItemsUseCase _getAllItemsUseCase;
   final UpdateItemQuantityUseCase _updateItemQuantityUseCase;
+  final DeleteItemUseCase _deleteItemUseCase;
   StreamSubscription _streamSubscription;
 
   HomeBloc(
     this._getAllItemsUseCase,
     this._updateItemQuantityUseCase,
+    this._deleteItemUseCase,
   );
 
   @override
@@ -45,6 +47,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         await _updateItemQuantityUseCase
             .initialize(item, UpdateItemActionType.decrement)
             .execute();
+        break;
+      case ItemDeletedHomeEvent:
+        final item = (event as ItemDeletedHomeEvent).item;
+        await _deleteItemUseCase.initialize(item).execute();
         break;
     }
   }

@@ -52,9 +52,28 @@ class UpdateItemQuantityUseCaseImpl implements UpdateItemQuantityUseCase {
 
   @override
   UpdateItemQuantityUseCase initialize(
-      Item item, UpdateItemActionType actionType) {
-    this._item = item;
-    this._actionType = actionType;
-    return this;
-  }
+    Item item,
+    UpdateItemActionType actionType,
+  ) =>
+      this
+        .._item = item
+        .._actionType = actionType;
+}
+
+abstract class DeleteItemUseCase implements FutureUseCase<int> {
+  DeleteItemUseCase initialize(Item item);
+}
+
+class DeleteItemUseCaseImpl implements DeleteItemUseCase {
+  Item _item;
+
+  final Repository<Item> _repository;
+
+  DeleteItemUseCaseImpl(this._repository);
+
+  @override
+  Future<int> execute() => _repository.delete(_item);
+
+  @override
+  DeleteItemUseCase initialize(Item item) => this.._item = item;
 }

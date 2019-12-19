@@ -16,6 +16,7 @@ class BlocModule implements Module {
     ..map<HomeBloc>((i) => HomeBloc(
           i.get<GetItemsUseCase>(),
           i.get<UpdateItemQuantityUseCase>(),
+          i.get<DeleteItemUseCase>(),
         ));
 }
 
@@ -27,7 +28,9 @@ class UseCaseModule implements Module {
     ..map<GetItemsUseCase>(
         (i) => GetItemsUseCaseImpl(i.get<Repository<Item>>()))
     ..map<UpdateItemQuantityUseCase>(
-        (i) => UpdateItemQuantityUseCaseImpl(i.get<Repository<Item>>()));
+        (i) => UpdateItemQuantityUseCaseImpl(i.get<Repository<Item>>()))
+    ..map<DeleteItemUseCase>(
+        (i) => DeleteItemUseCaseImpl(i.get<Repository<Item>>()));
 }
 
 class DatabaseModule implements Module {

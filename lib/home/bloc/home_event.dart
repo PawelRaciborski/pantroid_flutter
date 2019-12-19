@@ -20,3 +20,9 @@ class ItemRemovedHomeEvent implements HomeEvent {
 
   ItemRemovedHomeEvent(this.item);
 }
+
+class ItemDeletedHomeEvent implements HomeEvent {
+  final Item item;
+
+  ItemDeletedHomeEvent(this.item);
+}
