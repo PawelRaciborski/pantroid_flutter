@@ -8,3 +8,21 @@ class ListUpdatedHomeEvent implements HomeEvent {
 
   ListUpdatedHomeEvent(this.items);
 }
+
+class ItemAddedHomeEvent implements HomeEvent {
+  final Item item;
+
+  ItemAddedHomeEvent(this.item);
+}
+
+class ItemRemovedHomeEvent implements HomeEvent {
+  final Item item;
+
+  ItemRemovedHomeEvent(this.item);
+}
+
+class ItemDeletedHomeEvent implements HomeEvent {
+  final Item item;
+
+  ItemDeletedHomeEvent(this.item);
+}

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pantroid/add/add_item_page.dart';
@@ -7,8 +8,15 @@ import 'package:pantroid/model/tables.dart';
 
 import 'bloc/home_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const route = "/";
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<Item> expandedItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +24,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pantroid"),
       ),
-      body: _buildList(),
+      body: _buildList(expandedItems),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -26,21 +34,33 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildList() => BlocProvider<HomeBloc>(
+  Widget _buildList(List<Item> expandedItems) => BlocProvider<HomeBloc>(
         create: (_) => inject<HomeBloc>(),
         child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
           return ListView.builder(
             itemCount: state.displayItems.length,
             itemBuilder: (BuildContext context, int index) {
-              var item = state.displayItems[index];
+              final item = state.displayItems[index];
+              final bloc = BlocProvider.of<HomeBloc>(context);
               return _buildListItem(
                 item,
+                expandedItems.any((i) => i.id == item.id),
                 () {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Item [$index] \"${item.name}\" clicked"),
-                    ),
-                  );
+                  bloc.add(ItemAddedHomeEvent(item));
+                },
+                () {
+                  bloc.add(ItemRemovedHomeEvent(item));
+                },
+                () {
+                  expandedItems.remove(item);
+                  bloc.add(ItemDeletedHomeEvent(item));
+                },
+                (isExpanded) {
+                  if (isExpanded) {
+                    expandedItems.add(item);
+                  } else {
+                    expandedItems.removeWhere((i) => i.id == item.id);
+                  }
                 },
               );
             },
@@ -48,11 +68,32 @@ class HomePage extends StatelessWidget {
         }),
       );
 
-  Widget _buildListItem(Item item, Function onTap) => ListTile(
-        title: Text(item.name),
-        subtitle: Text(
-            "Quantity: ${item.quantity}, expiration date: ${item.expirationDate}"),
-        trailing: Icon(Icons.ac_unit),
-        onTap: onTap,
-      );
+  Widget _buildListItem(Item item, bool isExpanded, Function onAdd,
+      Function onRemove, Function onDelete, Function(bool) onExpanded) {
+    return ExpansionTile(
+      key: PageStorageKey<int>(item.id),
+      title: Text("${item.name} [${item.quantity}]"),
+      initiallyExpanded: isExpanded,
+      onExpansionChanged: onExpanded,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FlatButton(
+              child: Icon(Icons.add),
+              onPressed: onAdd,
+            ),
+            FlatButton(
+              child: Icon(Icons.remove),
+              onPressed: onRemove,
+            ),
+            FlatButton(
+              child: Icon(Icons.delete),
+              onPressed: onDelete,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
