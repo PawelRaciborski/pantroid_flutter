@@ -6,7 +6,6 @@ import 'package:pantroid/home/home_usecases.dart';
 import 'package:pantroid/model/tables.dart';
 
 part 'home_event.dart';
-
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -14,6 +13,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UpdateItemQuantityUseCase _updateItemQuantityUseCase;
   final DeleteItemUseCase _deleteItemUseCase;
   StreamSubscription _streamSubscription;
+
+  List<Item> _items;
 
   HomeBloc(
     this._getAllItemsUseCase,
@@ -24,7 +25,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   HomeState get initialState {
     _streamSubscription = _getAllItemsUseCase.execute().listen((data) {
-      add(ListUpdatedHomeEvent(data));
+    _items = data;
+      add(ListUpdatedHomeEvent(_items));
     });
     return HomeState.initial();
   }
@@ -51,6 +53,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       case ItemDeletedHomeEvent:
         final item = (event as ItemDeletedHomeEvent).item;
         await _deleteItemUseCase.initialize(item).execute();
+        break;
+      case FilterListHomeEvent:
+        final query = (event as FilterListHomeEvent).query;
+        var where = _items.where((item) {
+          var contains = item.name.contains(query);
+          return contains;
+        }).toList();
+        yield state.copyWith(displayItems: where);
         break;
     }
   }

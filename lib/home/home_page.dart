@@ -17,6 +17,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Item> expandedItems = [];
+  HomeBloc _bloc;
+  final _filterController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = inject<HomeBloc>();
+    _filterController.addListener(() {
+      _bloc.add(FilterListHomeEvent(_filterController.text));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,17 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Pantroid"),
       ),
-      body: _buildList(expandedItems),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _filterController,
+            ),
+          ),
+          Expanded(child: _buildList(expandedItems))
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -35,25 +56,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildList(List<Item> expandedItems) => BlocProvider<HomeBloc>(
-        create: (_) => inject<HomeBloc>(),
+        create: (_) => _bloc,
         child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
           return ListView.builder(
             itemCount: state.displayItems.length,
             itemBuilder: (BuildContext context, int index) {
               final item = state.displayItems[index];
-              final bloc = BlocProvider.of<HomeBloc>(context);
               return _buildListItem(
                 item,
                 expandedItems.any((i) => i.id == item.id),
                 () {
-                  bloc.add(ItemAddedHomeEvent(item));
+                  _bloc.add(ItemAddedHomeEvent(item));
                 },
                 () {
-                  bloc.add(ItemRemovedHomeEvent(item));
+                  _bloc.add(ItemRemovedHomeEvent(item));
                 },
                 () {
                   expandedItems.remove(item);
-                  bloc.add(ItemDeletedHomeEvent(item));
+                  _bloc.add(ItemDeletedHomeEvent(item));
                 },
                 (isExpanded) {
                   if (isExpanded) {
