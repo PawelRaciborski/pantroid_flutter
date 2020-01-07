@@ -39,8 +39,27 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _filterController,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: _filterController,
+                  ),
+                ),
+                DropdownButton<String>(
+                  items: <String>[
+                    "A",
+                    "B",
+                    "C"
+                  ].map<DropdownMenuItem<String>>((value) => DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      )).toList(),
+                  onChanged: (value) {
+
+                  },
+                )
+              ],
             ),
           ),
           Expanded(child: _buildList(expandedItems))
