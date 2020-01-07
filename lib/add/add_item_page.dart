@@ -15,8 +15,8 @@ class AddItemPage extends StatefulWidget {
 
 class _AddItemPageState extends State<AddItemPage> {
   AddItemBloc _addItemBloc;
-  final _controller = new TextEditingController();
-  final _quantityController = new TextEditingController();
+  final _controller = TextEditingController();
+  final _quantityController = TextEditingController();
 
   @override
   void initState() {
