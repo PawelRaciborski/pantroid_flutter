@@ -54,5 +54,21 @@ enum HomeStateSortingType {
 }
 
 extension HomeStateSortingTypeExtension on HomeStateSortingType {
-  String get displayName => this.toString().replaceAll("HomeStateSortingType.", "");
+  String get displayName {
+    switch (this) {
+      case HomeStateSortingType.nameAsc:
+        return "Name ↑";
+      case HomeStateSortingType.nameDes:
+        return "Name ↓";
+      case HomeStateSortingType.addingDateAsc:
+        return "Adding ↑";
+      case HomeStateSortingType.addingDateDesc:
+        return "Adding ↓";
+      case HomeStateSortingType.expirationDateAsc:
+        return "Expiration ↑";
+      case HomeStateSortingType.expirationDateDesc:
+        return "Expiration ↓";
+    }
+    throw Exception("Unsupported sorting type");
+  }
 }

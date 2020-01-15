@@ -82,22 +82,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         switch (sortingType) {
           case HomeStateSortingType.nameAsc:
             return firstItem.name.compareTo(secondItem.name);
-            break;
           case HomeStateSortingType.nameDes:
             return secondItem.name.compareTo(firstItem.name);
-            break;
           case HomeStateSortingType.addingDateAsc:
-            // TODO: Handle this case.
-            break;
+            return firstItem.addingDate.compareTo(secondItem.addingDate);
           case HomeStateSortingType.addingDateDesc:
-            // TODO: Handle this case.
-            break;
+            return secondItem.addingDate.compareTo(firstItem.addingDate);
           case HomeStateSortingType.expirationDateAsc:
-            // TODO: Handle this case.
-            break;
+            return firstItem.expirationDate
+                .compareTo(secondItem.expirationDate);
           case HomeStateSortingType.expirationDateDesc:
-            // TODO: Handle this case.
-            break;
+            return secondItem.expirationDate
+                .compareTo(firstItem.expirationDate);
         }
 
         return 0;
