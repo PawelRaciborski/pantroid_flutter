@@ -15,6 +15,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final DeleteItemUseCase _deleteItemUseCase;
   StreamSubscription _streamSubscription;
 
+  List<Item> _items;
+
+  String _query = "";
+  HomeStateSortingType _sortingType = HomeStateSortingType.addingDateDesc;
+
   HomeBloc(
     this._getAllItemsUseCase,
     this._updateItemQuantityUseCase,
@@ -24,7 +29,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   HomeState get initialState {
     _streamSubscription = _getAllItemsUseCase.execute().listen((data) {
-      add(ListUpdatedHomeEvent(data));
+      _items = data;
+      add(ListUpdatedHomeEvent(_items));
     });
     return HomeState.initial();
   }
@@ -33,8 +39,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     switch (event.runtimeType) {
       case ListUpdatedHomeEvent:
-        final items = (event as ListUpdatedHomeEvent).items;
-        yield state.copyWith(isLoading: false, displayItems: items);
+        yield state.copyWith(
+            isLoading: false, displayItems: _updateList(_query, _sortingType));
         break;
       case ItemAddedHomeEvent:
         final item = (event as ItemAddedHomeEvent).item;
@@ -52,7 +58,47 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final item = (event as ItemDeletedHomeEvent).item;
         await _deleteItemUseCase.initialize(item).execute();
         break;
+      case FilterListHomeEvent:
+        _query = (event as FilterListHomeEvent).query;
+        yield state.copyWith(displayItems: _updateList(_query, _sortingType));
+        break;
+      case SortListHomeEvent:
+        final sortingTypeName = (event as SortListHomeEvent).sortingType;
+        _sortingType = HomeStateSortingType.values
+            .firstWhere((item) => item.displayName == sortingTypeName);
+
+        yield state.copyWith(
+            sortingType: _sortingType,
+            displayItems: _updateList(_query, _sortingType));
+        break;
     }
+  }
+
+  List<Item> _updateList(String query, HomeStateSortingType sortingType) {
+    var filteredList =
+        _items.where((item) => item.name.contains(query)).toList();
+
+    return filteredList
+      ..sort((firstItem, secondItem) {
+        switch (sortingType) {
+          case HomeStateSortingType.nameAsc:
+            return firstItem.name.compareTo(secondItem.name);
+          case HomeStateSortingType.nameDes:
+            return secondItem.name.compareTo(firstItem.name);
+          case HomeStateSortingType.addingDateAsc:
+            return firstItem.addingDate.compareTo(secondItem.addingDate);
+          case HomeStateSortingType.addingDateDesc:
+            return secondItem.addingDate.compareTo(firstItem.addingDate);
+          case HomeStateSortingType.expirationDateAsc:
+            return firstItem.expirationDate
+                .compareTo(secondItem.expirationDate);
+          case HomeStateSortingType.expirationDateDesc:
+            return secondItem.expirationDate
+                .compareTo(firstItem.expirationDate);
+        }
+
+        return 0;
+      });
   }
 
   @override

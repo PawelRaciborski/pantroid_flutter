@@ -26,3 +26,15 @@ class ItemDeletedHomeEvent implements HomeEvent {
 
   ItemDeletedHomeEvent(this.item);
 }
+
+class FilterListHomeEvent implements HomeEvent {
+  final String query;
+
+  FilterListHomeEvent(this.query);
+}
+
+class SortListHomeEvent implements HomeEvent {
+  final String sortingType;
+
+  SortListHomeEvent(this.sortingType);
+}

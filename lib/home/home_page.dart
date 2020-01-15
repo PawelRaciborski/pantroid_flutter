@@ -17,55 +17,95 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Item> expandedItems = [];
+  HomeBloc _bloc;
+  final _filterController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Pantroid"),
-      ),
-      body: _buildList(expandedItems),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, AddItemPage.route);
-        },
-      ),
-    );
+  void initState() {
+    super.initState();
+    _bloc = inject<HomeBloc>();
+    _filterController.addListener(() {
+      _bloc.add(FilterListHomeEvent(_filterController.text));
+    });
   }
 
-  Widget _buildList(List<Item> expandedItems) => BlocProvider<HomeBloc>(
-        create: (_) => inject<HomeBloc>(),
-        child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-          return ListView.builder(
-            itemCount: state.displayItems.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = state.displayItems[index];
-              final bloc = BlocProvider.of<HomeBloc>(context);
-              return _buildListItem(
-                item,
-                expandedItems.any((i) => i.id == item.id),
-                () {
-                  bloc.add(ItemAddedHomeEvent(item));
-                },
-                () {
-                  bloc.add(ItemRemovedHomeEvent(item));
-                },
-                () {
-                  expandedItems.remove(item);
-                  bloc.add(ItemDeletedHomeEvent(item));
-                },
-                (isExpanded) {
-                  if (isExpanded) {
-                    expandedItems.add(item);
-                  } else {
-                    expandedItems.removeWhere((i) => i.id == item.id);
-                  }
-                },
-              );
+  @override
+  Widget build(BuildContext context) => BlocProvider<HomeBloc>(
+        create: (_) => _bloc,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Pantroid"),
+          ),
+          body: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: _filterController,
+                      ),
+                    ),
+                    BlocBuilder<HomeBloc, HomeState>(
+                      builder: (context, state) => DropdownButton<String>(
+                        items: state.sortingTypes
+                            .map<DropdownMenuItem<String>>(
+                                (value) => DropdownMenuItem(
+                                      value: value,
+                                      child: Text(value),
+                                    ))
+                            .toList(),
+                        onChanged: (value) {
+                          _bloc.add(SortListHomeEvent(value));
+                        },
+                        value: state.selectedSortingType,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(child: _buildList(expandedItems))
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              Navigator.pushNamed(context, AddItemPage.route);
             },
-          );
-        }),
+          ),
+        ),
+      );
+
+  Widget _buildList(List<Item> expandedItems) =>
+      BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) => ListView.builder(
+          itemCount: state.displayItems.length,
+          itemBuilder: (BuildContext context, int index) {
+            final item = state.displayItems[index];
+            return _buildListItem(
+              item,
+              expandedItems.any((i) => i.id == item.id),
+              () {
+                _bloc.add(ItemAddedHomeEvent(item));
+              },
+              () {
+                _bloc.add(ItemRemovedHomeEvent(item));
+              },
+              () {
+                expandedItems.remove(item);
+                _bloc.add(ItemDeletedHomeEvent(item));
+              },
+              (isExpanded) {
+                if (isExpanded) {
+                  expandedItems.add(item);
+                } else {
+                  expandedItems.removeWhere((i) => i.id == item.id);
+                }
+              },
+            );
+          },
+        ),
       );
 
   Widget _buildListItem(Item item, bool isExpanded, Function onAdd,
