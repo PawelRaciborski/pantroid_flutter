@@ -7,11 +7,12 @@ class HomeState {
   final List<String> sortingTypes;
   final String selectedSortingType;
 
-  const HomeState(
-      {@required this.isLoading,
-      @required this.displayItems,
-      @required this.sortingTypes,
-      @required this.selectedSortingType});
+  const HomeState({
+    @required this.isLoading,
+    @required this.displayItems,
+    @required this.sortingTypes,
+    @required this.selectedSortingType
+  });
 
   factory HomeState.initial() => HomeState(
         isLoading: true,

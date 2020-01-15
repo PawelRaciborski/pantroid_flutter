@@ -6,6 +6,7 @@ import 'package:pantroid/home/home_usecases.dart';
 import 'package:pantroid/model/tables.dart';
 
 part 'home_event.dart';
+
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -38,8 +39,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     switch (event.runtimeType) {
       case ListUpdatedHomeEvent:
-        final items = (event as ListUpdatedHomeEvent).items;
-        yield state.copyWith(isLoading: false, displayItems: items);
+        yield state.copyWith(
+            isLoading: false, displayItems: _updateList(_query, _sortingType));
         break;
       case ItemAddedHomeEvent:
         final item = (event as ItemAddedHomeEvent).item;
