@@ -63,9 +63,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield state.copyWith(displayItems: _updateList(_query, _sortingType));
         break;
       case SortListHomeEvent:
-        final sortingTypeName = (event as SortListHomeEvent).sortingType;
-        _sortingType = HomeStateSortingType.values
-            .firstWhere((item) => item.displayName == sortingTypeName);
+        _sortingType = (event as SortListHomeEvent).sortingType;
 
         yield state.copyWith(
             sortingType: _sortingType,

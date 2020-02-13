@@ -4,23 +4,20 @@ part of 'home_bloc.dart';
 class HomeState {
   final bool isLoading;
   final List<Item> displayItems;
-  final List<String> sortingTypes;
-  final String selectedSortingType;
+  final List<HomeStateSortingType> sortingTypes;
+  final HomeStateSortingType selectedSortingType;
 
-  const HomeState({
-    @required this.isLoading,
-    @required this.displayItems,
-    @required this.sortingTypes,
-    @required this.selectedSortingType
-  });
+  const HomeState(
+      {@required this.isLoading,
+      @required this.displayItems,
+      @required this.sortingTypes,
+      @required this.selectedSortingType});
 
   factory HomeState.initial() => HomeState(
         isLoading: true,
         displayItems: [],
-        sortingTypes: HomeStateSortingType.values
-            .map<String>((item) => item.displayName)
-            .toList(),
-        selectedSortingType: HomeStateSortingType.addingDateDesc.displayName,
+        sortingTypes: HomeStateSortingType.values.toList(),
+        selectedSortingType: HomeStateSortingType.addingDateDesc,
       );
 
   HomeState copyWith({
@@ -33,7 +30,7 @@ class HomeState {
     if (sortingType == null) {
       sorting = this.selectedSortingType;
     } else {
-      sorting = sortingType.displayName;
+      sorting = sortingType;
     }
 
     return HomeState(
@@ -58,17 +55,17 @@ extension HomeStateSortingTypeExtension on HomeStateSortingType {
   String get displayName {
     switch (this) {
       case HomeStateSortingType.nameAsc:
-        return "Name ↑";
+        return "name_asc";
       case HomeStateSortingType.nameDes:
-        return "Name ↓";
+        return "name_des";
       case HomeStateSortingType.addingDateAsc:
-        return "Adding ↑";
+        return "adding_date_asc";
       case HomeStateSortingType.addingDateDesc:
-        return "Adding ↓";
+        return "adding_date_desc";
       case HomeStateSortingType.expirationDateAsc:
-        return "Expiration ↑";
+        return "expiration_date_asc";
       case HomeStateSortingType.expirationDateDesc:
-        return "Expiration ↓";
+        return "expiration_date_desc";
     }
     throw Exception("Unsupported sorting type");
   }

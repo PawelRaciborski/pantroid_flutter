@@ -34,7 +34,7 @@ class FilterListHomeEvent implements HomeEvent {
 }
 
 class SortListHomeEvent implements HomeEvent {
-  final String sortingType;
+  final HomeStateSortingType sortingType;
 
   SortListHomeEvent(this.sortingType);
 }

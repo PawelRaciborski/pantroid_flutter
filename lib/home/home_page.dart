@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:pantroid/add/add_item_page.dart';
 import 'package:pantroid/di/injector.dart';
 import 'package:pantroid/home/bloc/home_bloc.dart';
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         create: (_) => _bloc,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Pantroid"),
+            title: Text(translate('app_bar.title')),
           ),
           body: Column(
             children: <Widget>[
@@ -48,12 +49,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     BlocBuilder<HomeBloc, HomeState>(
-                      builder: (context, state) => DropdownButton<String>(
+                      builder: (context, state) => DropdownButton<HomeStateSortingType>(
                         items: state.sortingTypes
-                            .map<DropdownMenuItem<String>>(
+                            .map<DropdownMenuItem<HomeStateSortingType>>(
                                 (value) => DropdownMenuItem(
                                       value: value,
-                                      child: Text(value),
+                                      child: Text(translate('sorting.${value.displayName}')),
                                     ))
                             .toList(),
                         onChanged: (value) {
