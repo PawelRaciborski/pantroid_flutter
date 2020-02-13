@@ -1,0 +1,13 @@
+{
+  "app_bar": {
+    "title": "Pantroid"
+  },
+  "sorting": {
+    "name_asc": "Name ↑",
+    "name_des": "Name ↓",
+    "adding_date_asc": "Adding ↑",
+    "adding_date_desc": "Adding ↓",
+    "expiration_date_asc": "Expiration ↑",
+    "expiration_date_desc": "Expiration ↓"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "app_bar": {
+    "title": "Spiżarnioid"
+  },
+  "sorting": {
+    "name_asc": "Nazwa ↑",
+    "name_des": "Nazwa ↓",
+    "adding_date_asc": "Dodanie ↑",
+    "adding_date_desc": "Dodanie ↓",
+    "expiration_date_asc": "Ważność ↑",
+    "expiration_date_desc": "Ważność ↓"
+  }
+}
